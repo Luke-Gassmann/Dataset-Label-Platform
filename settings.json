@@ -1,0 +1,15 @@
+{
+  "csv_file_name": "example_df.csv",
+  "label_column_name": "author_confirmation",
+  "display_columns": [
+    "post",
+    "reply"
+  ],
+  "labels": [
+    ["Label 1",  "This is the description for Label 1"],
+    ["Label 2",  "This is the description for Label 2"],
+    ["Label 3",  "This is the description for Label 3"],
+    ["Label 4",  "This is the description for Label 4"],
+    ["Label 5",  "This is the description for Label 5"]
+  ]
+}

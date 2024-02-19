@@ -1,0 +1,120 @@
+
+/*====================
+  Page Transitions
+  ==================== */
+:root {
+  --f7-page-swipeback-transition-duration: 300ms;
+  --f7-page-parallax-transition-duration: 500ms;
+  --f7-page-cover-transition-duration: 450ms;
+  --f7-page-dive-transition-duration: 500ms;
+  --f7-page-fade-transition-duration: 500ms;
+  --f7-page-flip-transition-duration: 700ms;
+  --f7-page-push-transition-duration: 500ms;
+}
+.ios {
+  --f7-page-transition-duration: 400ms;
+  --f7-page-bg-color: #ffffff;
+}
+.ios .theme-dark,
+.ios.theme-dark {
+  --f7-page-bg-color: #ffffff;
+}
+.md {
+  --f7-page-transition-duration: 250ms;
+  --f7-page-bg-color: #ffffff;
+}
+.md .theme-dark,
+.md.theme-dark {
+  --f7-page-bg-color: #ffffff;
+}
+.aurora {
+  --f7-page-transition-duration: 400ms;
+  --f7-page-bg-color: #ffffff;
+}
+.aurora .theme-dark,
+.aurora.theme-dark {
+  --f7-page-bg-color: #ffffff;
+}
+
+/*
+      #412e63
+      #565f99
+      #3bad89
+      #98e897
+      #d2d2d2
+*/
+
+
+/*====================
+  Color Themes
+  ==================== */
+:root {
+  --f7-color-os: #5c5e60;
+  --f7-color-os-rgb: 36, 185, 212;
+  --f7-color-os-shade: #dbdbdb;
+  --f7-color-os-tint: #d2d2d2;
+  --f7-color-deepos: #5c5e60;
+  --f7-color-deepos-rgb: 16, 109, 115;
+  --f7-color-deepos-shade: #212016;
+  --f7-color-deepos-tint: #6b6e70;
+}
+.color-theme-os-light {
+  --f7-theme-color: #6b6e70;
+  --f7-theme-color-rgb: 36, 185, 212;
+  --f7-theme-color-shade: #dbdbdb;
+  --f7-theme-color-tint: #d2d2d2;
+}
+
+.color-theme-os {
+  --f7-theme-color: #dbdbdb;
+  --f7-theme-color-rgb: 16, 109, 115;
+  --f7-theme-color-shade: #212016;
+  --f7-theme-color-tint: #d2d2d2;
+  --swiper-theme-color: #212016;
+}
+
+
+.color-theme-deep-os {
+  --f7-theme-color: #5c5e60;
+  --f7-theme-color-rgb: 16, 109, 115;
+  --f7-theme-color-shade: #212016;
+  --f7-theme-color-tint: #6b6e70;
+}
+.color-os {
+  --f7-theme-color: #a4a4a4;
+  --f7-theme-color-rgb: 36, 185, 212;
+  --f7-theme-color-shade: #dbdbdb;
+  --f7-theme-color-tint: #d2d2d2;
+}
+.text-color-os {
+  --f7-theme-color-text-color: #a4a4a4;
+}
+.bg-color-os {
+  --f7-theme-color-bg-color: #a4a4a4;
+}
+.border-color-os {
+  --f7-theme-color-border-color: #a4a4a4;
+}
+.ripple-color-os,
+.ripple-os {
+  --f7-theme-color-ripple-color: rgba(255, 107, 34, 0.3);
+}
+.color-os {
+  --f7-theme-color: #5c5e60;
+  --f7-theme-color-rgb: 16, 109, 115;
+  --f7-theme-color-shade: #212016;
+  --f7-theme-color-tint: #6b6e70;
+}
+.text-color-deep-os {
+  --f7-theme-color-text-color: #5c5e60;
+}
+.bg-color-deep-os {
+  --f7-theme-color-bg-color: #5c5e60;
+}
+.border-color-deep-os {
+  --f7-theme-color-border-color: #5c5e60;
+}
+.ripple-color-deep-os,
+.ripple-deep-os {
+  --f7-theme-color-ripple-color: rgba(16, 109, 115, 0.3);
+}

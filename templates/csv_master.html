@@ -1,0 +1,397 @@
+
+{% extends "necessary.html" %}
+
+{% block page_name %}Welcome{% endblock %}
+
+
+{% block css_links %}
+<style>
+    .top_bar_icon{
+        width: 1.5em;
+        text-align: right;
+        opacity: 0;
+    }
+
+    #top_bar{
+        background-color: #212016;
+    }
+
+    #top_bar h6, #top_bar p{
+        color: #dbdbdb;
+        margin: 1em !important;
+        font-size: 0.9em;
+    }
+
+    #main_table_section[ignore="True"]{
+        background-color: #2a2a2a !important;
+    }
+
+    #main_table_section[ignore="False"] #ignore_message{
+        display: none;
+    }
+
+    #current_label_h3{
+        text-align: center;
+        font-size: 1em;
+    }
+
+    #main_table_section[ignore="False"] #current_label_h3{
+        margin-top: 3em;
+        font-size: 1.5em;
+    }
+
+    #main_table_section[ignore="True"] td{
+        padding: 0.5em;
+    }
+
+    #main_table_section[ignore="True"] *:not(#explanation){
+        opacity: 0.9;
+        pointer-events: none;
+        color: white !important;
+    }
+
+    #settings_table[ignore="True"] #ignore_button{
+        display: none;
+    }
+
+    #settings_table[ignore="False"] #ignore_button{
+        display: block;
+    }
+
+    #settings_table[ignore="True"] #cancel_ignore_button{
+        display: block;
+    }
+
+    #settings_table[ignore="False"] #cancel_ignore_button{
+        display: none;
+    }
+
+    .img_button{
+        cursor: pointer;
+    }
+
+    #main_table_section[ignore="True"] #explanation *{
+        color: #2a2a2a !important;
+    }
+
+    .type_post_title{
+        font-size: 0.8em;
+        font-weight: lighter;
+    }
+
+    .type_post_content{
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+    .influence_label_button[selected_label="true"]{
+        background-color: black;
+    }
+
+</style>
+{% endblock %}
+
+
+{% block layout_js %}
+<script>
+    $(".influence_label_button").click(function(){
+        label = $(this).text()
+
+        if (label !== "Reset") {
+
+            if ($(this).attr("selected_label") === "true") {
+                $(this).attr("selected_label", "false")
+            }
+            else{
+                $(this).attr("selected_label", "true")
+            }
+
+            active_labels = []
+            $(".influence_label_button[selected_label='true']").each(function(){
+                active_labels.push($(this)[0].textContent)
+            })
+
+            if (active_labels.length === 0){
+                $("#current_label").text("None")
+            }
+            else{
+                $("#current_label").text(JSON.stringify(active_labels))
+            }
+        }
+        else{
+            $(".influence_label_button[selected_label='true']").attr("selected_label", "false")
+            $("#current_label").text("None")
+        }
+    })
+
+    stored_combination = {{ stored_combination | safe }}
+
+    $("#load_combination").click(function () {
+
+        console.log("Loading Combination: " + stored_combination)
+
+        $(".influence_label_button[selected_label='true']").attr("selected_label", "false")
+        $("#current_label").text("None")
+
+        for (item in stored_combination){
+            item = stored_combination[item]
+            console.log(item)
+            buttons = $(".influence_label_button:contains('" + item + "')")
+            if (buttons.length > 0){
+                $(buttons[0]).click()
+            }
+        }
+
+    })
+
+    $("#save_combination").click(function (){
+        current_combination = $("#current_label").text()
+
+        if ( current_combination !== "None" ){
+
+            console.log("Saving Combination: " + current_combination)
+            current_combination = JSON.parse(current_combination)
+
+            Framework7.request.post('/csv_master_combination_save',
+                {
+                    combination: JSON.stringify(current_combination)
+                },
+                function(data) {
+
+                    data = JSON.parse(data)
+                    console.log(data);  // Log the response for debugging
+
+                    if (data["success"]){
+                        stored_combination = current_combination
+                        alert("Combination Saved")
+                    }
+                    else{
+                        alert(data["error"])
+                    }
+            })
+        }
+    })
+
+    $(".save_next").click(function(){
+
+        function savePost(current_row_number, next_row_number, success_function){
+
+            Framework7.request.post('/row_save_csv_master',
+                {
+                    id: current_row_number,
+                    label: $("#current_label").text()
+                },
+                function(data) {
+
+                    data = JSON.parse(data)
+                    console.log(data);  // Log the response for debugging
+
+                    if (data["success"]){
+
+                        success_function(next_row_number)
+
+                    }
+                    else{
+                        alert(data["error"])
+                    }
+            })
+        }
+
+        current_row_number = {{ current_id }}
+
+        type_next = $(this).attr("type_next")
+
+        if (type_next === "l") {
+            next_row_number = current_row_number - 1
+        }
+        else if (type_next === "r"){
+            next_row_number = current_row_number + 1
+        }
+        else if (type_next === "c"){
+            next_row_number = $("#next_row_input").val()
+        }
+        else{
+            alert("Failed: " + type_next)
+        }
+
+        savePost(current_row_number, next_row_number, function(next_row_number){
+            console.log("Next Page: /csv_master?id="+next_row_number)
+            window.location.href = "/csv_master?id="+next_row_number
+            window.location.replace("/csv_master?id="+next_row_number);
+        })
+
+    })
+
+
+
+</script>
+{% endblock %}
+
+
+{% block layout_content %}
+<div>
+    <div id="top_bar">
+        <table style="width: 100%;">
+            <tr>
+                <td>
+
+                    <table>
+                        <tr>
+
+                            <td style="text-align: left">
+                                <p>Current ID: {{ current_id }}</p>
+                            </td>
+
+                            <td>
+                                <p>File: {{ file_name }}</p>
+                            </td>
+
+                        </tr>
+                    </table>
+
+                </td>
+                <td style="text-align: right">
+                    <table style="margin-left: auto; margin-right: 0;">
+                        <tr>
+                            <td>
+                                <img src="/static/Resources/Images/default.png" class="top_bar_icon">
+                            </td>
+                            <td>
+                                <p>Rows To Do: {{ rows_left }}</p>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <img src="/static/Resources/Images/default.png" class="top_bar_icon">
+                            </td>
+                            <td>
+                                <p>Rows Edited: {{ rows_done }}</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <table id="main_table_section" style="width: 70em; margin: 0 auto;" ignore="False">
+        <tr>
+            <td>
+                <h3 id="current_label_h3">You have selected: <span id="current_label">{{ stringified_current_label }}</span></h3>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width: 70%; margin: auto; margin-top: 2em;">
+                    <tr>
+                        <td>
+
+                            {% for data in display_data %}
+
+                            <h5>{{ data[1] }}</h5>
+                            <hr>
+                            <p class="type_post_content">
+                                {{ data[2] | safe }}
+                            </p>
+                            <br>
+                            {% endfor %}
+
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div style="width: 90%; margin: auto; text-align: center">
+                            <button style="width: 15em; margin: 0 auto; display: inline-block; margin: 1em;" class="influence_label_button col button color-black button-fill button-round">Reset</button>
+                    {% for label in labels %}
+                            <button style="min-width: 15em; width: auto; margin: 0 auto; display: inline-block; margin: 1em;" selected_label={% if label[0] in current_label: %}"true"{% else %}"false"{% endif %} class="influence_label_button col button button-fill button-round">{{ label[0] }}</button>
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center">
+            <hr>
+            <button id="save_combination" style="min-width: 15em; width: auto; margin: 0 auto; display: inline-block; margin: 1em;" class="col button color-black button-fill button-round">Save Combination</button>
+            <button id="load_combination" style="min-width: 15em; width: auto; margin: 0 auto; display: inline-block; margin: 1em;" class="col button color-black button-fill button-round">Load Combination</button>
+            </td>
+        </tr>
+    </table>
+
+    <table id="settings_table" style="width: 70em; margin: 0 auto;" ignore="{{ ignore }}">
+        <tr>
+            <td>
+                <hr style="margin-top: 3em;">
+                <table style="margin: 0 auto; width: 90%">
+                    <tr>
+                        <td width="5%" style="text-align: left">
+                            <img src="/static/Resources/Images/next.png" type_next="l" class="img_button save_next" style="width: 2em; transform: rotate(180deg)">
+                        </td>
+                        <td width="85%" style="text-align: center">
+
+                            <table width="50%" style="margin: 0 auto">
+                                <tr>
+                                    <td>
+                            <div class="list inline-labels no-hairlines-md" style="margin: 0">
+
+
+                                <ul>
+                                    <li class="item-content item-input" id="lr_manual">
+                                    <div class="item-inner">
+                                      <div class="item-title item-label">Go To Position</div>
+                                      <div class="item-input-wrap">
+                                        <input type="text" id="next_row_input" placeholder="e.g. {{ current_id }}" />
+                                        <span class="input-clear-button"></span>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                            </div>
+                                        </td>
+                                <td>
+                            <img src="/static/Resources/Images/search.png" type_next="c"  class="img_button save_next" style="width: 2em">
+                                </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                        <td width="5%" style="text-align: right">
+                            <img src="/static/Resources/Images/next.png" type_next="r" class="img_button save_next" style="width: 2em">
+                        </td>
+                    </tr>
+                </table>
+                <hr>
+
+                <p style="text-align: center; font-size: 0.8em">
+                    Changes will be saved when the page switches to next or the previous item in the database.
+                </p>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+
+                    {% for label in labels %}
+
+        <div class="card color-theme-deep-os" style="margin-top: 2em; margin-bottom: 1em;">
+                <div class="card-header">{{ label[0] }}</div>
+                <div class="card-content card-content-padding">
+                    {{ label[1] | safe}}
+                </div>
+        </div>
+
+                    {% endfor %}
+
+            </td>
+        </tr>
+
+    </table>
+
+
+</div>
+{% endblock %}

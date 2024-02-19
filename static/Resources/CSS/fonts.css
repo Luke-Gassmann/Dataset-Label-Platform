@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'mainRegular';
+    src: url('../Fonts/Quicksand-Regular.ttf'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'mainLight';
+    src: url('../Fonts/Quicksand-Light.ttf'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'mainBold';
+    src: url('../Fonts/Quicksand-Bold.ttf'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'bebas';
+    src: url('../Fonts/Bebas.ttf'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'caviar';
+    src: url('../Fonts/Caviar.ttf'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+
+
+
